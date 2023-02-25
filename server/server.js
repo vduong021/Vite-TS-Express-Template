@@ -1,9 +1,10 @@
-import express from 'express';
-import path from 'path';
+const express = require ('express');
+const path = require ('path');
+const router = require ('./routes/api');
 
 const app = express();
 const port= 5555;
-const __dirname = path.resolve();
+// const __dirname = path.resolve();
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -14,9 +15,7 @@ app.get('/', (req, res) => {
   res.status(200).sendFile(path.resolve(__dirname, '../index.html'));
 })
 
-app.get('/', (req, res) => {
-     res.status(200).send('Hi')
-});
+app.use('/api', router);
 
 // Default 404 handler
 app.use('*', (req, res) => {
