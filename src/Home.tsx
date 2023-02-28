@@ -1,40 +1,74 @@
-import { useState, useEffect } from 'react'
-import './App.css'
-import Logs from './Logs'
+import { useState, useEffect } from 'react';
+import './App.css';
+import Logs from './Logs';
 
-const Home = () => {
-  const [savedNotes, setSavedNotes] = useState([])
-  const [note, setNote] = useState('');
+interface Note {
+  _id: string;
+  note: string;
+  createdAt: Date;
+}
+
+
+const Home = (): JSX.Element => {
+  const [savedNotes, setSavedNotes] = useState<Note[]>([]);
+  const [note, setNote] = useState<string>('');
 
   useEffect(() => {
-    fetch('/api')
-    .then(response => response.json())
-    .then(data => {
-      console.log('this is fetch', data);
-      return setSavedNotes(data)
-    })
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const responseData = await response.json();
+        // console.log('this is fetch', responseData);
+        setSavedNotes(responseData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
   }, []);
 
-  const addNote = () => {
-    const data = {
-      note: note
-    };
-    fetch('/api', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-      .then(res => res.json())
-      .then(data => console.log(data))
+  const handleAddNotes = async () => {
+    const data = { note };
+    try {
+      const response = await fetch('/api', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const { message } = await response.json();
+      console.log(message);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
+  const handleSearchNotes = async () => {
+    const data = { note };
+    try {
+      const response = await fetch('/api/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const responseData = await response.json();
+      setSavedNotes(responseData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-
-  const fetchNotes = savedNotes.map((el, index) =>
-    <Logs className='Log' key={index} data = {el} />
-  );
+  const fetchNotes = savedNotes.map((el: Note, index: number) => (
+    <Logs className="Log" key={index} data={el} />
+  ));
 
   return (
     <div className="App">
@@ -42,31 +76,35 @@ const Home = () => {
       <div className="card">
         <label htmlFor="notes">
           Note:
-          <input 
-            type="text" 
-            id='note' 
-            placeholder='20(Min)-300(Max) characters'
-            onChange={e => setNote(e.target.value)} />
+          <input
+            type="text"
+            id="note"
+            placeholder="20(Min)-300(Max) characters"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setNote(e.target.value)
+            }
+          />
         </label>
 
-        <button onClick={addNote}>
-          Add
-        </button>
+        <button onClick={handleAddNotes}>Add</button>
       </div>
       <div className="search">
         <label htmlFor="notes">
           Search:
-          <input type="text" id='search' placeholder='20(Min)-300(Max) characters' />
+          <input
+            type="text"
+            id="search"
+            placeholder="20(Min)-300(Max) characters"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setNote(e.target.value)
+            }
+          />
         </label>
-        <button onClick={addNote}>
-          Enter
-        </button>
+        <button onClick={handleSearchNotes}>Enter</button>
       </div>
-      <div>
-        {fetchNotes}
-      </div>
+      <div>{fetchNotes}</div>
     </div>
-  )
-}
+  );
+};
 
 export default Home;

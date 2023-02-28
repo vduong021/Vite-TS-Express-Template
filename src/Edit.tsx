@@ -1,46 +1,56 @@
-import { useState } from "react";
+import { useState, MouseEvent } from "react";
 import Popup from "reactjs-popup";
 
-const Edit = (props: any) => {
-  const [editNote, setEditNote] = useState('');
+interface EditProps {
+  id: string;
+}
 
-  const editHandle = (e: any) => {
+const Edit: React.FC<EditProps> = ({ id }) => {
+  const [editNote, setEditNote] = useState<string>('');
+
+  const editHandle = async (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
     const data = {
       note: editNote
     };
-    console.log(e.target.id)
-    fetch(`/api/${e.target.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-      .then(res => res.json())
-      .then(data => console.log(data) )
-  };
+    console.log(e.currentTarget.id)
+    try {
+      const response = await fetch(`/api/${e.currentTarget.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      const responseData = await response.json();
+      console.log(responseData);
+    } catch (error) {
+      console.error(error);
+    }
+  };  
 
   return (
-    <div>
-      <Popup trigger=
-        {<button>Edit</button>}
-      >          
-        <label htmlFor="notes">
-          Note:
-          <input 
-            type="text" 
-            
-            placeholder='20(Min)-300(Max) characters'
-            onChange={e => setEditNote(e.target.value)} />
-        </label>
-        <button
-          id={props.id}
-          onClick={e => editHandle(e)}
-        >
-          Submit Edit
-        </button>
+    <>
+      <Popup trigger={
+        <button>Edit</button>
+      }>
+        <div className="edit-popup">          
+          <label htmlFor="notes">
+            Note:
+            <input 
+              type="text" 
+              placeholder='20(Min)-300(Max) characters'
+              onChange={e => setEditNote(e.target.value)} />
+          </label>
+          <button
+            id={id}
+            onClick={e => editHandle(e)}
+          >
+            Submit Edit
+          </button>
+        </div>  
       </Popup>
-    </div>
+    </>
   );
 };
 

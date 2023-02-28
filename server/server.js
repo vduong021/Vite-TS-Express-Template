@@ -1,30 +1,39 @@
-const express = require ('express');
-const path = require ('path');
-const router = require ('./routes/api');
+const express = require('express');
+const path = require('path');
+const router = require('./routes/api');
 
 const app = express();
-const port= 5555;
-// const __dirname = path.resolve();
+const PORT = 5555;
 
+// Middleware
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../src')));
 
-app.use(express.static(path.resolve(__dirname, '../src')));
-
+// Routes
 app.get('/', (req, res) => {
-  res.status(200).sendFile(path.resolve(__dirname, '../index.html'));
-})
+  res.sendFile(path.join(__dirname, '../index.html'));
+});
 
 app.use('/api', router);
 
-// Default 404 handler
-app.use('*', (req, res) => {
-  res.status(404)
-  .send(
-    'Page not found'
-  );
+// 404 Error Handler
+app.use((req, res, next) => {
+  const error = new Error('Page not found');
+  error.status = 404;
+  next(error);
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on Port ${port}`)
-})
+// Error Handler
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.json({
+    message: err.message,
+    error: process.env.NODE_ENV === 'production' ? {} : err.stack,
+  });
+});
+
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server listening on Port ${PORT}`);
+});
