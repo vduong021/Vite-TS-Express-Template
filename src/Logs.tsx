@@ -23,7 +23,7 @@ const Logs = (props: LogProps) => {
     .then(data => {
       console.log('this data is deleted', data);
     })
-    // window.location.reload()
+    window.location.reload()
   }
 
   return (
