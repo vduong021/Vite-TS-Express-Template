@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-;
+require('dotenv').config();
 
 mongoose.connect(process.env.API_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.once('open', () => {
