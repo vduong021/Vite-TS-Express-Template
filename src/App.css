@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -33,7 +37,7 @@
   }
 }
 
-.card, .search {
+/* .card {
   border-radius: 8px;
   border: 1px solid;
   border-color: aliceblue;
@@ -44,7 +48,7 @@
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
-}
+} */
 
 .read-the-docs {
   color: #888;

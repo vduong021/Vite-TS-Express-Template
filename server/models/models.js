@@ -7,7 +7,7 @@ mongoose.connection.once('open', () => {
 
 const dataSchema = new mongoose.Schema({
   note: {type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.toString },
 });
 
 const Instance = mongoose.model('Instance', dataSchema);

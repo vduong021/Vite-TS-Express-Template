@@ -23,12 +23,17 @@ const Logs = (props: LogProps) => {
     window.location.reload()
   }
 
+  // const dateConvert = (date: any) => {
+  //   const newDate = date.toDateString()
+  //   return newDate
+  // }
+
   return (
-    <div className="logs">
+    <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal text-gray-500">
       <>
-        {props.data.note}
-        {props.data.createdAt}
-      
+        <h4 className="text-2xl">
+          <span className="font-bold">Note:</span>  {props.data.note}</h4> 
+        Date Created: {props.data.createdAt}
       <button 
         className="deleteBtn" 
         id = {props.data._id}

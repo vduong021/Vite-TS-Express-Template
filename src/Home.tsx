@@ -31,21 +31,28 @@ const Home = (): JSX.Element => {
   }, []);
 
   const handleAddNotes = async () => {
-    const data = { note };
-    try {
-      const response = await fetch('/api', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+    if (note.length < 20 || note.length > 300) {
+        
+        alert('Note Form must have the following validations: Must not be shorter than 20 characters and Must not be longer than 300 characters');
+        }
+    
+    else {
+      const data = { note };
+      try {
+        const response = await fetch('/api', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const { message } = await response.json();
+        console.log(message);
+      } catch (error) {
+        console.error(error);
       }
-      const { message } = await response.json();
-      console.log(message);
-    } catch (error) {
-      console.error(error);
-    }
+    };
   };
 
   const handleSearchNotes = async () => {
@@ -71,36 +78,41 @@ const Home = (): JSX.Element => {
   ));
 
   return (
+    
     <div className="App">
+  
       <h1>Dydx Notes</h1>
-      <div className="card">
-        <label htmlFor="notes">
+      <div className="container w- mx-auto bg-gray-200 rounded-xl shadow border p-8 m-10 text-gray-700">
+        <label htmlFor="notes" className='text-gray-700 text-md font-bold mb-2'>
           Note:
           <input
+            className='mx-4 text-white'
             type="text"
             id="note"
-            placeholder="20(Min)-300(Max) characters"
+            placeholder="20-300 characters"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setNote(e.target.value)
             }
           />
         </label>
 
-        <button onClick={handleAddNotes}>Add</button>
+        <button className='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow' onClick={handleAddNotes}>Add</button>
       </div>
-      <div className="search">
-        <label htmlFor="notes">
+      <div className="container mx-auto bg-gray-200 rounded-xl shadow border p-8 m-10 text-gray-700 ">
+        <label htmlFor="notes" className='text-gray-700 text-md font-bold mb-2'>
           Search:
           <input
+            id='note'
+            className='lass="shadow appearance-none border rounded mx-3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-white'
             type="text"
-            id="search"
-            placeholder="20(Min)-300(Max) characters"
+            
+            placeholder="20-300 characters"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setNote(e.target.value)
             }
           />
         </label>
-        <button onClick={handleSearchNotes}>Enter</button>
+        <button className='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow' onClick={handleSearchNotes}>Enter</button>
       </div>
       <div>{fetchNotes}</div>
     </div>
