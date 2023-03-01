@@ -14,7 +14,7 @@ const Logs = (props: LogProps) => {
   const deleteNote = (e: React.MouseEvent<HTMLButtonElement>) => {
 
     e.preventDefault();
-    fetch(`/api/${e.currentTarget.id}`, {
+    fetch(`https://dydxexpress.vercel.app/api/${e.currentTarget.id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

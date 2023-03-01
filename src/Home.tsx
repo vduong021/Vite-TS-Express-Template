@@ -15,7 +15,7 @@ const Home = (): JSX.Element => {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('/api');
+      const response = await fetch('https://dydxexpress.vercel.app/api');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -37,7 +37,7 @@ const Home = (): JSX.Element => {
     else {
       const data = { note };
       try {
-        const response = await fetch('/api', {
+        const response = await fetch('https://dydxexpress.vercel.app/api', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
@@ -56,7 +56,7 @@ const Home = (): JSX.Element => {
   const handleSearchNotes = async () => {
     const data = { note };
     try {
-      const response = await fetch('/api/search', {
+      const response = await fetch('https://dydxexpress.vercel.app/api', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
