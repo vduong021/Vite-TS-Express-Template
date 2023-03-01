@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+;
 
-mongoose.connect('mongodb+srv://vthanhd:8FBpL74j1dtHP6NO@cluster0.chyhi71.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.API_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.once('open', () => {
   console.log('Connected to Database');
 });
