@@ -13,22 +13,20 @@ const Home = (): JSX.Element => {
   const [savedNotes, setSavedNotes] = useState<Note[]>([]);
   const [note, setNote] = useState<string>('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/api');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const responseData = await response.json();
-        // console.log('this is fetch', responseData);
-        setSavedNotes(responseData);
-      } catch (error) {
-        console.error(error);
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/api');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
-    };
-    fetchData();
-  }, []);
+      const responseData = await response.json();
+      // console.log('this is fetch', responseData);
+      setSavedNotes(responseData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   const handleAddNotes = async () => {
     if (note.length < 20 || note.length > 300) {
@@ -48,10 +46,10 @@ const Home = (): JSX.Element => {
           throw new Error('Network response was not ok');
         }
         const { message } = await response.json();
-        console.log(message);
       } catch (error) {
         console.error(error);
-      }
+      };
+      fetchData()
     };
   };
 
@@ -70,12 +68,17 @@ const Home = (): JSX.Element => {
       setSavedNotes(responseData);
     } catch (error) {
       console.error(error);
-    }
+    };
+    fetchData();
   };
 
   const fetchNotes = savedNotes.map((el: Note, index: number) => (
     <Logs className="Log" key={index} data={el} />
   ));
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     

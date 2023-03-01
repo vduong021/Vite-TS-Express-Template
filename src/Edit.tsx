@@ -26,7 +26,8 @@ const Edit: React.FC<EditProps> = ({ id }) => {
       console.log(responseData);
     } catch (error) {
       console.error(error);
-    }
+    };
+    window.location.reload()
   };  
 
   return (
