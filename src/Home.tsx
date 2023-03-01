@@ -20,7 +20,7 @@ const Home = (): JSX.Element => {
         throw new Error('Network response was not ok');
       }
       const responseData = await response.json();
-      // console.log('this is fetch', responseData);
+      console.log('this is fetch', responseData);
       setSavedNotes(responseData);
     } catch (error) {
       console.error(error);
@@ -45,7 +45,7 @@ const Home = (): JSX.Element => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        const { message } = await response.json();
+        // const { message } = await response.json();
       } catch (error) {
         console.error(error);
       };
@@ -56,7 +56,7 @@ const Home = (): JSX.Element => {
   const handleSearchNotes = async () => {
     const data = { note };
     try {
-      const response = await fetch('https://dydxexpress.vercel.app/api', {
+      const response = await fetch('https://dydxexpress.vercel.app/api/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -69,7 +69,7 @@ const Home = (): JSX.Element => {
     } catch (error) {
       console.error(error);
     };
-    fetchData();
+    // fetchData();
   };
 
   const fetchNotes = savedNotes.map((el: Note, index: number) => (

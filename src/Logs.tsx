@@ -12,14 +12,17 @@ interface LogProps {
 const Logs = (props: LogProps) => {
 
   const deleteNote = (e: React.MouseEvent<HTMLButtonElement>) => {
-
+    console.log('this is e', e)
     e.preventDefault();
     fetch(`https://dydxexpress.vercel.app/api/${e.currentTarget.id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       }
-    });
+    }).then(result => {result.json()})
+    .then(data => {
+      console.log('this data is deleted', data);
+    })
     window.location.reload()
   }
 
@@ -32,7 +35,7 @@ const Logs = (props: LogProps) => {
       <button 
         className="deleteBtn" 
         id = {props.data._id}
-        onClick = {(e: React.MouseEvent<HTMLButtonElement>) => deleteNote(e)}
+        onClick = {e => deleteNote(e)}
       > 
         Delete 
       </button>
