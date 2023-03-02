@@ -1,6 +1,11 @@
 import Edit from "./Edit";
+import { useEffect } from 'react';
+import Note from './Home';
 
 interface LogProps {
+  key?: number,
+  setRefresh?: any,
+  fetchData?: any,
   className?: string;
   data: {
     _id?: any;
@@ -9,22 +14,30 @@ interface LogProps {
   }
 }
 
+
+
 const Logs = (props: LogProps) => {
 
-  const deleteNote = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log('this is e', e)
-    e.preventDefault();
-    fetch(`https://dydxexpress.vercel.app/api/${e.currentTarget.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    }).then(result => {result.json()})
-    .then(data => {
-      console.log('this data is deleted', data);
-    })
-    window.location.reload()
-  }
+  const deleteNote = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('this is refresh', props.setRefresh)
+    try {
+      e.preventDefault();
+      const response = await fetch(`https://dydx-express-e5pbsbqzs-vduong021.vercel.app/api/${e.currentTarget.id}`, {
+        method: 'DELETE',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+      console.log('this data is deleted', response);
+      props.setRefresh(true);
+    } catch (error) {
+      console.error('An error occurred while deleting the note:', error);
+    }
+  };
+
+
+
 
   return (
     <div className="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal text-gray-500">

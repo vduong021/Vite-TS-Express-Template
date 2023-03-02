@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import Logs from './Logs';
 
-interface Note {
+export interface Note {
   _id: string;
   note: string;
   createdAt: Date;
@@ -12,10 +12,13 @@ interface Note {
 const Home = (): JSX.Element => {
   const [savedNotes, setSavedNotes] = useState<Note[]>([]);
   const [note, setNote] = useState<string>('');
+  const [refresh, setRefresh] = useState(true);
+
+  const addTextBox = useRef('')
 
   const fetchData = async () => {
     try {
-      const response = await fetch('https://dydxexpress.vercel.app/api');
+      const response = await fetch('https://dydx-express-e5pbsbqzs-vduong021.vercel.app/api');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -37,7 +40,7 @@ const Home = (): JSX.Element => {
     else {
       const data = { note };
       try {
-        const response = await fetch('https://dydxexpress.vercel.app/api', {
+        const response = await fetch('https://dydx-express-e5pbsbqzs-vduong021.vercel.app/api', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
@@ -45,18 +48,19 @@ const Home = (): JSX.Element => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        // const { message } = await response.json();
       } catch (error) {
         console.error(error);
       };
-      fetchData()
+      // @ts-ignore
+      addTextBox.current.value = ''
+      setRefresh(true)
     };
   };
 
   const handleSearchNotes = async () => {
     const data = { note };
     try {
-      const response = await fetch('https://dydxexpress.vercel.app/api/search', {
+      const response = await fetch('https://dydx-express-e5pbsbqzs-vduong021.vercel.app/api/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
@@ -69,16 +73,18 @@ const Home = (): JSX.Element => {
     } catch (error) {
       console.error(error);
     };
-    // fetchData();
   };
 
   const fetchNotes = savedNotes.map((el: Note, index: number) => (
-    <Logs className="Log" key={index} data={el} />
-  ));
+  <Logs className="Log" key={index} data={el} fetchData={fetchData} setRefresh={setRefresh}/>
+    ));
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (refresh){
+      fetchData();
+      setRefresh(false);
+    }
+  }, [refresh]);
 
   return (
     
@@ -88,14 +94,16 @@ const Home = (): JSX.Element => {
       <div className="container w- mx-auto bg-gray-200 rounded-xl shadow border p-8 m-10 text-gray-700">
         <label htmlFor="notes" className='text-gray-700 text-md font-bold mb-2'>
           Note:
-          <input
+          <input 
             className='mx-4 text-white'
             type="text"
             id="note"
             placeholder="20-300 characters"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
               setNote(e.target.value)
             }
+            // @ts-ignore
+            ref={addTextBox}
           />
         </label>
 

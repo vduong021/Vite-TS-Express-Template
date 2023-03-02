@@ -15,7 +15,7 @@ const Edit: React.FC<EditProps> = ({ id }) => {
     };
     console.log(e.currentTarget.id)
     try {
-      const response = await fetch(`https://dydxexpress.vercel.app/api/${e.currentTarget.id}`, {
+      const response = await fetch(`https://dydx-express-e5pbsbqzs-vduong021.vercel.app/api/${e.currentTarget.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
